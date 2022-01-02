@@ -3,26 +3,30 @@ package main
 import (
 	"fmt"
 	"net/smtp"
+	"time"
 )
 
-func testEmail(client *smtp.Client, email string) (bool, error) {
+func testEmail(client *smtp.Client, email string) (bool, time.Duration, error) {
+	errDuration := time.Duration(0)
+
 	err := client.Noop()
 	if err != nil {
-		return false, err
+		return false, errDuration, err
 	}
 
 	err = client.Mail("")
 	if err != nil {
-		return false, err
+		return false, errDuration, err
 	}
 
+	startTime := time.Now()
 	err = client.Rcpt(email)
 	client.Reset()
 	if err != nil {
-		return false, nil
+		return false, errDuration, nil
 	}
 
-	return true, nil
+	return true, time.Since(startTime), nil
 }
 
 func testEmails(emails []string, host string) error {
@@ -34,16 +38,20 @@ func testEmails(emails []string, host string) error {
 	client.Hello("client.example.com")
 
 	var validEmails []string
+	var longSuspects []string
 	for _, email := range emails {
 		fmt.Printf("Testing email %s... ", email)
-		valid, err := testEmail(client, email)
+		valid, elapsed, err := testEmail(client, email)
 		if err != nil {
 			return err
 		}
 
 		if valid {
 			validEmails = append(validEmails, email)
-			fmt.Println("seemed to work")
+			fmt.Println("seemed to work, ( took", elapsed, ")")
+			if elapsed.Seconds() >= 1 {
+				longSuspects = append(longSuspects, email)
+			}
 		} else {
 			fmt.Println("invalid email.")
 		}
@@ -64,6 +72,10 @@ func testEmails(emails []string, host string) error {
 		fmt.Println()
 		fmt.Println("However, I've found that sometimes the one real email can")
 		fmt.Println("have a longer delay compared to all of the others.")
+		fmt.Println("These emails took at least 1 second to process:")
+		for _, email := range longSuspects {
+			fmt.Println(email)
+		}
 	}
 
 	return nil

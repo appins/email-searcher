@@ -55,7 +55,11 @@ func main() {
 	fmt.Println("Using host", host)
 
 	emails := generateEmails(name, domain)
-	testEmails(emails, host)
+	err = testEmails(emails, host)
+
+	if err != nil {
+		fmt.Println("An error occured:", err)
+	}
 
 }
 
