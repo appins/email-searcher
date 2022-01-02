@@ -25,6 +25,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	fmt.Println(generateNames(name))
+
 	fmt.Printf("name='%s' domain='%s'\n", name, domain)
 
 	fmt.Println("Testing ISP...")
@@ -37,32 +39,6 @@ func main() {
 			"port 25. You may want to try on another network or hotspot.")
 		return
 	}
-
-	// client, _ := smtp.Dial("gmail-smtp-in.l.google.com:25")
-	// client.Hello("client.example.com")
-	// client.Mail("")
-	// err := client.Rcpt("aleasldkjflsakjfxandersonone@gmail.com")
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// client.Reset()
-	// client.Mail("")
-	// err = client.Rcpt("alexandersonone@gmail.com")
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// client.Reset()
-	// client.Mail("")
-	// err = client.Rcpt("asdjflkajsfdl@gmail.com")
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// client.Quit()
 
 }
 
