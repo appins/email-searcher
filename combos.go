@@ -30,18 +30,24 @@ func rearrange(pieces []string) [][]string {
 
 }
 
-func generateNames(name string) []string {
+// This function takes a name and generates possible emails
+func generateEmails(name string, domain string) []string {
 	name = strings.ToLower(name)
 	pieces := strings.Split(name, " ")
 
-	var result []string
+	var usernames []string
 	arrangements := rearrange(pieces)
 
 	for _, arrangement := range arrangements {
-		result = append(result, generateNamesWithArrangement(arrangement)...)
+		usernames = append(usernames, generateNamesWithArrangement(arrangement)...)
 	}
 
-	return result
+	var emails []string
+	for _, username := range usernames {
+		emails = append(emails, username+"@"+domain)
+	}
+
+	return emails
 }
 
 // This function takes a name as an array of words (e.g. ["laura" "nyro"])
@@ -76,7 +82,7 @@ func generateNamesWithArrangement(pieces []string) []string {
 
 	// Filter out very unlikely usernames
 	var filters []*regexp.Regexp
-	filterStrings := []string{"(\\.|\\+|_)(\\.|\\+|_)", "^(\\.|\\+|_)", "(\\.|\\+|_)$"}
+	filterStrings := []string{"(\\.|\\+|_)(\\.|\\+|_)", "^(\\.|\\+|_)", "(\\.|\\+|_)$", "^$"}
 	for _, filterString := range filterStrings {
 		filters = append(filters, regexp.MustCompile(filterString))
 	}

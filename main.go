@@ -12,8 +12,8 @@ import (
 func main() {
 	var name, domain string
 
-	flag.StringVar(&name, "n", "", "The name of the person we'd like to find the email of")
-	flag.StringVar(&domain, "d", "", "The domain we're this person's email is registered on")
+	flag.StringVar(&name, "name", "", "The name of the person we'd like to find the email of")
+	flag.StringVar(&domain, "domain", "", "The domain we're this person's email is registered on")
 	flag.Parse()
 
 	if name == "" {
@@ -24,8 +24,6 @@ func main() {
 		fmt.Println("Domain must be defined!")
 		os.Exit(1)
 	}
-
-	fmt.Println(generateNames(name))
 
 	fmt.Printf("name='%s' domain='%s'\n", name, domain)
 
@@ -39,6 +37,25 @@ func main() {
 			"port 25. You may want to try on another network or hotspot.")
 		return
 	}
+
+	fmt.Println("ISP test succeeded!")
+
+	fmt.Println("Getting mail server...")
+	mxs, err := net.LookupMX(domain)
+	if err != nil {
+		fmt.Println("Error finding mail server for", domain, ":", err)
+		return
+	}
+	if len(mxs) == 0 {
+		fmt.Println("No mail server records found for", domain)
+		fmt.Println("Perhaps there isn't a mail server configured?")
+	}
+
+	host := mxs[0].Host
+	fmt.Println("Using host", host)
+
+	emails := generateEmails(name, domain)
+	testEmails(emails, host)
 
 }
 
