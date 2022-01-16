@@ -9,4 +9,4 @@ Run it with both the domain and name flags, like:
 
 It will attempt to guess the email and report back any successful findings. 
 For example, the above query will yield my correct email: alex@appins.dev,
-even if it is only able to determine that its probably the correct email.
+even if it is not able to determine that with certainty.

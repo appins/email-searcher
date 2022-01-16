@@ -64,6 +64,7 @@ func testEmails(emails []string, host string) error {
 	}
 
 	if len(validEmails) == len(emails) {
+		fmt.Println()
 		fmt.Println("HOWEVER!!!")
 		fmt.Println("It seems that no emails failed to verify. It's very")
 		fmt.Println("likely the email server is configured to not allow")
