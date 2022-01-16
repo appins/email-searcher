@@ -66,20 +66,20 @@ func main() {
 func testIsp() bool {
 	// Any error occuring in this function means there is probably
 	// a connection issue (e.g. ISP blocking outgoing requests)
-	timeout, _ := time.ParseDuration("5s")
+	timeout, _ := time.ParseDuration(TEST_TIMEOUT)
 	dialer := net.Dialer{Timeout: timeout}
-	conn, err := dialer.Dial("tcp", "gmail-smtp-in.l.google.com:25")
+	conn, err := dialer.Dial("tcp", SERVER_WITH_WORKING_EMAIL)
 	if err != nil {
 		return false
 	}
-	client, err := smtp.NewClient(conn, "gmail-smtp-in.l.google.com:25")
+	client, err := smtp.NewClient(conn, SERVER_WITH_WORKING_EMAIL)
 	if err != nil {
 		return false
 	}
 
 	client.Hello("client.example.com")
 	client.Mail("")
-	err = client.Rcpt("alexandersonone@gmail.com")
+	err = client.Rcpt(KNOWN_WORKING_EMAIL)
 	client.Quit()
 
 	if err != nil {
